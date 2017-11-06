@@ -1,0 +1,197 @@
+# critical constants: Temperature [T], Pressure [Pa], and Acentric factor [-]
+800.0
+3.96e8
+1.0
+#Number Of Atoms
+18
+# Number of groups
+4
+# carboxyl-group
+flexible
+# number of atoms
+4
+# atomic positions
+0 C_cooh
+1 O=c
+2 O_oh
+3 H_oh
+# phenyl-ring
+rigid
+# number of atoms
+6
+# atomic positions
+4  C_arom   5.535099264   -4.987274406    5.003082553 
+5  C_benz   6.255979698   -3.815892283    4.699479790 
+6  C_benz   5.640516979   -2.563506907    4.768516986 
+7  C_benz   4.295540490   -2.464228750    5.124993893 
+8  C_benz   3.557322788   -3.616835433    5.402716449 
+9  C_arom   4.160610724   -4.885908660    5.344758063 
+# hydrogens
+flexible
+# number of atoms
+4
+# 
+10 H_benz
+11 H_benz
+12 H_benz
+13 H_benz
+# carboxyl-group
+flexible
+# number of atoms
+4
+# atomic positions
+14 C_cooh
+15 O=c
+16 O_oh
+17 H_oh
+# Chiral centers Bond  BondDipoles Bend  UrayBradley InvBend  Torsion Imp. Torsion Bond/Bond Stretch/Bend Bend/Bend Stretch/Torsion Bend/Torsion IntraVDW IntraCoulomb
+               0   18            0   20            0       0       20            0         0            0         0               0            0       42           42
+# Bond stretch: atom n1-n2, type, parameters
+7 8    RIGID_BOND
+7 12   HARMONIC_BOND 369400 1.080
+8 9    RIGID_BOND
+8 13   HARMONIC_BOND 369400 1.080
+9 4    RIGID_BOND
+4 5    RIGID_BOND
+5 10   HARMONIC_BOND 369400 1.080
+5 6    RIGID_BOND
+6 11   HARMONIC_BOND 369400 1.080
+6 7    RIGID_BOND
+0 4    HARMONIC_BOND 269725 1.529
+0 1    HARMONIC_BOND 322060 1.23 
+0 2    HARMONIC_BOND 322060 1.32
+2 3    HARMONIC_BOND 556560 0.945
+14 9   HARMONIC_BOND 269725 1.529
+14 15  HARMONIC_BOND 322060 1.23
+14 16  HARMONIC_BOND 322060 1.32
+17 16  HARMONIC_BOND 556560 0.945
+# Bend stretch: atom n1-n2-n3, type, parameters
+2 0 4     HARMONIC_BEND 54882.4848123699 114.0
+1 0 4     HARMONIC_BEND 54882.4848123699 114.0
+15 14 9   HARMONIC_BEND 54882.4848123699 114.0
+16 14 9   HARMONIC_BEND 54882.4848123699 114.0
+9 4 0     HARMONIC_BEND 54882.4848123699  120
+5 4 0     HARMONIC_BEND 54882.4848123699  120
+3 2 0     HARMONIC_BEND 54882.4848123699  110
+17 16 14  HARMONIC_BEND 54882.4848123699  110
+4 9 14    HARMONIC_BEND 54882.4848123699  120
+8 9 14    HARMONIC_BEND 54882.4848123699  120
+1 0 2     HARMONIC_BEND 135960.162321060 132.0
+15 14 16  HARMONIC_BEND 135960.162321060 132.0
+4 5 10    HARMONIC_BEND 54882.4848123699  120
+10 5 6    HARMONIC_BEND 54882.4848123699  120
+5 6 11    HARMONIC_BEND 54882.4848123699  120
+11 6 7    HARMONIC_BEND 54882.4848123699  120
+6 7 12    HARMONIC_BEND 54882.4848123699  120
+12 7 8    HARMONIC_BEND 54882.4848123699  120
+7 8 13    HARMONIC_BEND 54882.4848123699  120
+13 8 9    HARMONIC_BEND 54882.4848123699  120
+# Torsion: atom n1-n2-n3-n4, type, parameters
+1 0 2 3     TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+15 14 16 17 TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+0 4 9 14    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+10 5 4 0    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+6 5 4 0     TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+7 8 9 14    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+13 8 9 14   TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+8 9 4 0     TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+5 4 9 14    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+10 5 6 11   TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+11 6 7 12   TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+12 7 8 13   TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+10 5 6 7    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+10 5 4 9    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+11 6 5 4    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+11 6 7 8    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+12 7 6 5    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+12 7 8 9    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+13 8 7 6    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+13 8 9 4    TRAPPE_DIHEDRAL      0.0   0.0   1258.890391861  0.0
+#
+3 5   0.5
+3 6   0.5
+3 7   0.5
+3 8   0.5
+3 14  0.5
+3 16  0.5
+3 10  0.5
+3 11  0.5
+3 12  0.5 
+3 13  0.5     
+3 15  0.5
+3 17  0.5
+2 15  0.5
+2 16  0.5
+2 17  0.5
+2 11  0.5
+2 7   0.5
+2 12  0.5 
+2 13  0.5
+1 15  0.5
+1 16  0.5
+1 17  0.5
+1 7   0.5
+1 12  0.5
+1 13  0.5
+0 12  0.5
+0 17  0.5 
+14 11 0.5
+15 11 0.5
+15 12 0.5
+15 6  0.5
+16 11 0.5
+16 12 0.5
+16 6  0.5
+17 13 0.5
+17 8  0.5 
+17 7  0.5
+17 12 0.5
+17 6  0.5
+17 11 0.5
+17 10 0.5
+17 5  0.5
+#    
+3 5   0.5
+3 6   0.5 
+3 7   0.5
+3 8   0.5
+3 14  0.5
+3 16  0.5
+3 10  0.5
+3 11  0.5
+3 12  0.5  
+3 13  0.5
+3 15  0.5 
+3 17  0.5
+2 15  0.5
+2 16  0.5
+2 17  0.5
+2 11  0.5
+2 7   0.5
+2 12  0.5
+2 13  0.5
+1 15  0.5 
+1 16  0.5
+1 17  0.5
+1 7   0.5
+1 12  0.5
+1 13  0.5
+0 12  0.5
+0 17  0.5
+14 11 0.5
+15 11 0.5 
+15 12 0.5
+15 6  0.5
+16 11 0.5
+16 12 0.5
+16 6  0.5
+17 13 0.5
+17 8  0.5
+17 7  0.5
+17 12 0.5 
+17 6  0.5
+17 11 0.5
+17 10 0.5
+17 5  0.5
+# Number of config moves
+0

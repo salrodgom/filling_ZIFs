@@ -1,0 +1,86 @@
+# critical constants: Temperature [T], Pressure [Pa], and Acentric factor [-]
+720.0
+5630000.0
+0.209
+# Number Of Atoms
+10
+# Number Of Groups
+1
+# Alkane-group
+flexible
+# number of atoms
+10
+# atomic positions
+0 S_dmso
+1 O_dmso
+2 C_dmso
+3 H_dmso
+4 H_dmso
+5 H_dmso
+6 C_dmso
+7 H_dmso
+8 H_dmso
+9 H_dmso
+# Chiral centers Bond  BondDipoles Bend  UrayBradley InvBend  Torsion Imp. Torsion Bond/Bond Stretch/Bend Bend/Bend Stretch/Torsion Bend/Torsion IntraVDW IntraCoulomb
+               0    9            0   15            0       0       12            0         0            0         0               0            0        9            9
+# Bond stretch: atom n1-n2, type, parameters
+0 1  HARMONIC_BOND   543480.0    1.53
+0 2  HARMONIC_BOND   241500.0    1.80
+2 3  HARMONIC_BOND   324100.0    1.11
+2 4  HARMONIC_BOND   324100.0    1.11
+2 5  HARMONIC_BOND   324100.0    1.11
+0 6  HARMONIC_BOND   241500.0    1.80
+6 7  HARMONIC_BOND   324100.0    1.11
+6 8  HARMONIC_BOND   324100.0    1.11
+6 9  HARMONIC_BOND   324100.0    1.11
+# Bond bending: atom n1-n2-n3, type, parameters
+1 0 2  HARMONIC_BEND      79510.0   106.75
+1 0 6  HARMONIC_BEND      79510.0   106.75
+2 0 6  HARMONIC_BEND      34200.0    95.0
+0 2 3  HARMONIC_BEND      46397.0   111.3
+0 2 4  HARMONIC_BEND      46397.0   111.3
+0 2 5  HARMONIC_BEND      46397.0   111.3
+0 6 7  HARMONIC_BEND      46397.0   111.3
+0 6 8  HARMONIC_BEND      46397.0   111.3
+0 6 9  HARMONIC_BEND      46397.0   111.3
+3 2 4  HARMONIC_BEND      35700.0   108.4
+3 2 5  HARMONIC_BEND      35700.0   108.4
+4 2 5  HARMONIC_BEND      35700.0   108.4
+7 6 8  HARMONIC_BEND      35700.0   108.4
+7 6 9  HARMONIC_BEND      35700.0   108.4
+8 6 9  HARMONIC_BEND      35700.0   108.4
+# Torsion n1-n2-n3-n4 type
+1 0 6 7   CVFF_DIHEDRAL   100.6  3  0.0
+1 0 6 8   CVFF_DIHEDRAL   100.6  3  0.0
+1 0 6 9   CVFF_DIHEDRAL   100.6  3  0.0
+1 0 2 3   CVFF_DIHEDRAL   100.6  3  0.0
+1 0 2 4   CVFF_DIHEDRAL   100.6  3  0.0
+1 0 2 5   CVFF_DIHEDRAL   100.6  3  0.0
+2 0 6 7   CVFF_DIHEDRAL   100.6  3  0.0
+2 0 6 8   CVFF_DIHEDRAL   100.6  3  0.0
+2 0 6 9   CVFF_DIHEDRAL   100.6  3  0.0
+6 0 2 3   CVFF_DIHEDRAL   100.6  3  0.0
+6 0 2 4   CVFF_DIHEDRAL   100.6  3  0.0
+6 0 2 5   CVFF_DIHEDRAL   100.6  3  0.0
+# Intra VDW: atom n1-n2
+3 9 0.5
+3 8 0.5
+3 7 0.5
+4 9 0.5
+4 8 0.5
+4 7 0.5
+5 9 0.5
+5 8 0.5
+5 7 0.5
+# Intra VDW: atom n1-n2
+3 9 0.5
+3 8 0.5
+3 7 0.5
+4 9 0.5
+4 8 0.5
+4 7 0.5
+5 9 0.5
+5 8 0.5
+5 7 0.5
+# Number of config moves
+0
