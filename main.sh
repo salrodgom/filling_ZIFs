@@ -174,6 +174,7 @@ function resumen {
 }
 ##############################################################
 # main program:
+cp lib/forcefield.lib .
 cp ${CIFFile} ${CIFTemporallyFile}
 cycle=0
 n_Ar=0
