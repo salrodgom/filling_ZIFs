@@ -95,6 +95,7 @@ function mc_muVT_raspa {
  sed 's/MODEL    2/MODEL    1/g' c > input.pdb
  rm c
  rm -rf VTK Movies/System_0/Framework* Movies/System_0/Movie_*_component_*.pdb Movies/System_0/Movie_*_frameworks.pdb
+ cp ../pdb2cif .
  ./pdb2cif
  mv p1.cif ${CIFTemporallyFile}
  cp ${CIFTemporallyFile} ../${CIFTemporallyFile}
