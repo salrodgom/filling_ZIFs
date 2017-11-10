@@ -6,7 +6,7 @@ PrintEvery                    100
 RandomSeed                    RANDOMSEED
 Forcefield                    Local
 CutOff                        16.709 # sigma*4.9 # Tanaka et al.
-ChargeMethod                  Ewald
+ChargeMethod                  None
 Framework                     0
 RemoveAtomNumberCodeFromLabel no
 FrameworkName                 STRUCTURE
