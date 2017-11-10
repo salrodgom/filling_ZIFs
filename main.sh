@@ -74,10 +74,10 @@ function mc_muVT_raspa {
  cp ../${CIFTemporallyFile} .
  cp ../cif2lammps .
  cp ../lib/forcefield.lib .
- sed "s/STRUCTURE/${CyclesNameFile}/g" INPUT > simulation.input
+ sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
  sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
- sed -i "s/PRESSURE/${pressure}/g" simulation.input
+ sed -i "s/PRESSURE/1.0e12/g" simulation.input
  sed -i "s/GUEST/${guest}/g" simulation.input
  sed -i "s/CYCLESEVERY/${CyclesEvery}/g" simulation.input
  sed -i "s/INITCYCLES/${InitCycles}/g" simulation.input
