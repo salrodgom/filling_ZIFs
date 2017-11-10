@@ -1,12 +1,12 @@
 #!/bin/bash
 CIFFile=$1
 nCPU=$2
-n_cycles=5
+n_cycles=2
 temperature=85.0
 pressure=0.0
-filling_mode="RASPA"
+filling_mode="RASPA" # Rabdel_Code
 # MC-Filling:
-CyclesEvery=7500
+CyclesEvery=2500
 InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1}')
 MoviesEvery=$((CyclesEvery - 1))
 #
@@ -71,10 +71,10 @@ function mc_muVT_raspa {
  # RASPA
  cp ${raspa_files_folder}/*.def .
  cp ${raspa_files_folder}/INPUT .
- cp ${CIFTemporallyFile} .
+ cp ../${CIFTemporallyFile} .
  cp ../cif2lammps .
  cp ../lib/forcefield.lib .
- sed "s/STRUCTURE/${CIFTemporallyFile}/g" INPUT > simulation.input
+ sed "s/STRUCTURE/${CyclesNameFile}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
  sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
  sed -i "s/PRESSURE/${pressure}/g" simulation.input
@@ -122,6 +122,7 @@ function fill_with_guest {
     cd $folder
      mc_muVT_raspa
     cd ..
+    ;;
    *) echo "Invalid option"
       exit 0
     ;;
