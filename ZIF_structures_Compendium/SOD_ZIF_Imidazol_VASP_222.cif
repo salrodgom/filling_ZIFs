@@ -14,7 +14,7 @@ _cell_angle_alpha                 89.9922
 _cell_angle_beta                  89.9929
 _cell_angle_gamma                 89.9925
 loop_
-_atom_site_type_symbol
+_atom_site_label
 _atom_site_fract_x
 _atom_site_fract_y
 _atom_site_fract_z

@@ -20,7 +20,6 @@ FlexibleFramework  yes
 
 Component 0 MoleculeName               GUEST
             MoleculeDefinition         Local
-            IdealGasRosenbluthWeight   5.34756e-07
             FugacityCoefficient        1.0
             TranslationProbability     1.0
             RegrowProbability          1.0
@@ -28,21 +27,4 @@ Component 0 MoleculeName               GUEST
             SwapProbability            1.0
             WidomProbability           1.0
             CFSwapLambdaProbability    0.0
-            RestrictMovesToCylinder  yes
-             Cylinder          0
-             CylinderCenter    0 0 0
-             CylinderRadius    10.0
-             CylinderDirection Z
-             Cylinder          1
-             CylinderCenter    0.5 0 0
-             CylinderRadius    10.0
-             CylinderDirection Z
-             Cylinder          2
-             CylinderCenter    0 0.5 0
-             CylinderRadius    10.0
-             CylinderDirection Z
-             Cylinder          3
-             CylinderCenter    0.5 0.5 0
-             CylinderRadius    10.0
-             CylinderDirection Z
             CreateNumberOfMolecules    0
