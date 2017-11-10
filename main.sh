@@ -6,7 +6,7 @@ temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
 # MC-Filling:
-CyclesEvery=2500
+CyclesEvery=3000
 InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1}')
 MoviesEvery=$((CyclesEvery - 1))
 #
