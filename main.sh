@@ -1,7 +1,7 @@
 #!/bin/bash
 CIFFile=$1
 nCPU=$2
-n_cycles=2
+n_cycles=3
 temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
@@ -74,7 +74,7 @@ function mc_muVT_raspa {
  cp ${raspa_files_folder}/INPUT .
  cp ../${CIFTemporallyFile} .
  cp ../cif2lammps .
- cp $lib_folder/*.lib .
+ cp $lib_folder/forcefield.lib .
  sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
  sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
@@ -301,7 +301,7 @@ function resumen {
 }
 ##############################################################
 # main program:
-cp lib/forcefield.lib .
+cp ${lib_folder}/forcefield.lib .
 cp ${CIFFile} ${CIFTemporallyFile}
 cycle=0
 n_Ar=0
