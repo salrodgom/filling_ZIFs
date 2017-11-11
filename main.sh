@@ -20,6 +20,7 @@ CIFTemporallyFile=${structure}_${seed}.cif
 # Files:
 raspa_files_folder=$(pwd)/lib/fff_raspa
 lammps_files_folder=$(pwd)/lib/fff_lammps
+lib_folder=$(pwd)/lib
 src_files_folder=$(pwd)/src
 ##############################################################
 # Functions:
@@ -73,7 +74,7 @@ function mc_muVT_raspa {
  cp ${raspa_files_folder}/INPUT .
  cp ../${CIFTemporallyFile} .
  cp ../cif2lammps .
- cp ../lib/forcefield.lib .
+ cp $lib_folder/*.lib .
  sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
  sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
@@ -132,16 +133,46 @@ function fill_with_guest {
 }
 function interface_adsorption_lammps {
  lammps_file_lib="in.lmp"
- cp lib/forcefield.lib .
- cp ../lib/forcefield.lib .
+ cp ${lib_folder}/forcefield.lib .
  flags="-S"
- if [ "${flags_cif2lammps}" == "post-loading" ] ; then
-  flags="-f -wq -S"
- elif [ "${flags_cif2lammps}" == "initialisation" ] ; then
-  flags="-S"
- elif [ "${flags_cif2lammps}" == "post-Xe-Ar-exchange" ] ; then
-  flags="-wq -S"
- fi
+ case "${flags_cif2lammps}" in
+  post-loading)
+   case "${filling_mode}" in
+    Rabdel_Code)
+    flags="-f -wq -S"
+    ;;
+    RASPA)
+    flags="-wq -S"
+    ;;
+    *)
+    echo "WARNING: filling_mode NOT taken"
+    flags="-wq -S"
+    ;;
+   esac
+  ;;
+  initialisation)
+   flags="-S"
+  ;;
+  post-Xe-Ar-exchange)
+   flags="-wq -S"
+  ;;
+  *)
+   echo "WARNING: flags_cif2lammps NOT taken"
+   flags="-wq -S"
+  ;;
+ esac 
+#
+# if [ "${flags_cif2lammps}" == "post-loading" ] ; then
+#  if [ "${filling_mode}" == "Rabdel_Code" ] ; then
+#   flags="-f -wq -S"
+#  elif 
+#  
+#
+# elif [ "${flags_cif2lammps}" == "initialisation" ] ; then
+#  flags="-S"
+# elif [ "${flags_cif2lammps}" == "post-Xe-Ar-exchange" ] ; then
+#  flags="-wq -S"
+# fi
  ./cif2lammps -c ${CyclesNameFile}.cif ${flags}
 }
 function first_optimisation {
