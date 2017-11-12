@@ -2,11 +2,10 @@
 CIFFile=$1
 nCPU=$2
 n_cycles=3
-temperature=85.0
+temperature=138.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
-# MC-Filling:
-CyclesEvery=3000
+CyclesEvery=7500
 InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1}')
 MoviesEvery=$((CyclesEvery - 1))
 #
@@ -98,9 +97,6 @@ function mc_muVT_raspa {
  rm -rf VTK Movies/System_0/Framework* Movies/System_0/Movie_*_component_*.pdb Movies/System_0/Movie_*_frameworks.pdb
  cp ../pdb2cif .
  ./pdb2cif
- mv p1.cif ${CIFTemporallyFile}
- cp ${CIFTemporallyFile} ../${CIFTemporallyFile}
- cp ${CIFTemporallyFile} ../${CyclesNameFile}.cif
 }
 function fill_with_guest {
  update_name
@@ -123,6 +119,12 @@ function fill_with_guest {
    RASPA)
     cd $folder
      mc_muVT_raspa
+     n_Ar=$(grep 'absolute adsorption:' Output/System_0/output_*.data | grep 'avg' | awk '{print $3}' | tail -n1 )
+     n_Ar=${n_Ar%.*}
+     Arname=$(echo $CIFTemporallyFile | sed 's/\.cif//g')_Ar.cif
+     update_name
+     cp p1.cif ../${CIFTemporallyFile}
+     cp p1.cif ../${CyclesNameFile}.cif
     cd ..
     ;;
    *) echo "Invalid option"
@@ -276,12 +278,14 @@ UnitCells 2 2 2" > simulation.input
  mv Movies/System_0/Framework_0_final_2_2_2_P1.cif input.cif
 }
 function distance_angle_measure {
- CIF111to222
+ #CIF111to222
+ cp ${CyclesNameFile}.cif input.cif
+ #
  echo "input.cif 5
 ${CyclesNameFile}.Geometrical_Analysis.txt
 1.7 2.6
 1.25 1.60" > main.txt
- ./zif_dist_angle_02 main.txt
+ ./zif_dist_angle_02 main.txt > salida.zif_dist_angle_02.txt
  rm -rf Movies Output VTK Restart main.txt input.cif 
  max_dist_ZnN=$(cat ${CyclesNameFile}.Geometrical_Analysis.txt | grep "ZnN_distances" | awk '{print $4}')
  ave_dist_ZnN=$(cat ${CyclesNameFile}.Geometrical_Analysis.txt | grep "ZnN_distances" | awk '{print $3}')
