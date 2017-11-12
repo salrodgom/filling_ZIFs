@@ -2,7 +2,7 @@
 CIFFile=$1
 nCPU=$2
 n_cycles=3
-temperature=138.0
+temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
 CyclesEvery=7500
@@ -39,7 +39,7 @@ function update_name {
 }
 function check_supercell {
 # Check cell size for correct calculation of energies considering cutoff
- cutoff=16.0
+ cutoff=10.0
  ua=1
  ub=1
  uc=1
@@ -59,7 +59,9 @@ function check_supercell {
   let "uc++"
   c_cell=$(echo "$uc*$c_cell" | bc -l)
  done
+ echo "$CIFTemporallyFile"
  echo "Make Supercell: ${ua}x${ub}x${uc} > $a_cell $b_cell $c_cell"
+ echo "==========================================================="
 }
 function makeCIFTopology {
  ./cif2lammps -c ${CIFTemporallyFile} -wq -S
@@ -77,18 +79,15 @@ function mc_muVT_raspa {
  sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
  sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
- sed -i "s/PRESSURE/1.0e12/g" simulation.input
+ sed -i "s/PRESSURE/100000/g" simulation.input
  sed -i "s/GUEST/${guest}/g" simulation.input
  sed -i "s/CYCLESEVERY/${CyclesEvery}/g" simulation.input
  sed -i "s/INITCYCLES/${InitCycles}/g" simulation.input
  sed -i "s/MOVIESEVERY/${MoviesEvery}/g" simulation.input
- #check_supercell
- ua=1
- ub=1
- uc=1
- #
+ check_supercell
  sed -i "s/SUPERCELL/$ua $ub $uc/g" simulation.input
  makeCIFTopology
+ echo "Run RASPA"
  go_raspa
  #wait_for_raspa
  sed '/MODEL    2/,$d' Movies/System_0/Movie*allcomponents.pdb > c
