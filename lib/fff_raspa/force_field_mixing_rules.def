@@ -3,7 +3,7 @@ shifted
 # general rule tailcorrections
 no
 # number of defined interactions
-27
+14
 # type interaction, parameters.    IMPORTANT: define shortest matches first, so that more specific ones overwrites these
 O_             lennard-jones    48.1581   3.03315
 N_             lennard-jones    34.74     3.261   #22.04116  3.261   #38.9492   3.26256 
@@ -19,18 +19,5 @@ CH4            lennard-jones    148.0     3.73
 Ar             lennard-jones    119.8     3.41    # Tanaka et al. 119.8     3.34
 Kr             lennard-jones    166.4     3.636
 Xe             lennard-jones    221.0     4.1
-Ow             lennard-jones    75.61570483 3.1169
-Hw             lennard-jones    3.8968460127  0.98
-S_dmso         lennard-jones    176.128   3.565062389
-O_dmso         lennard-jones    60.3867   3.03030303
-H_dmso         lennard-jones    12.0773   2.3885918
-C_dmso         lennard-jones    39.2514   3.636363636
-C_benz         lennard-jones    35.226    3.55
-H_benz         lennard-jones    15.097    2.42
-C_arom         lennard-jones    35.226    3.55
-C_cooh         lennard-jones    52.83     3.75   
-O=c            lennard-jones   105.68     2.96
-O_oh           lennard-jones    85.54     3.0
-H_oh           none
 # general mixing rule for Lennard-Jones
 Lorentz-Berthelot
