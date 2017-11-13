@@ -94,6 +94,7 @@ program zif_cif2gin
  logical                                      :: modify_topology_flag = .false.
  logical                                      :: fill_with_Ar_flag    = .false.
  logical                                      :: adsorption_fast_atom_saturation_INPUT = .false.
+ logical                                      :: input_from_RASPA =.false.
  !
  num_args = command_argument_count()
  allocate(args(num_args))
@@ -128,6 +129,9 @@ program zif_cif2gin
     modify_topology_flag = .true.
    case ('-F','--fill-with-Ar')
     fill_with_Ar_flag = .true.
+   case ('-R','--from-RASPA')
+    input_from_RASPA=.true.
+    string_stop_head= "_atom_site_charge"
   end select
  end do
  open(100,file=CIFfilename,status='old',iostat=ierr)
@@ -192,15 +196,17 @@ program zif_cif2gin
   if(ierr/=0) exit
   i=i+1
   atom(i)%n_components=1
-  if(charges_flag) then
-   read(line,*)atom(i)%label,(atom(i)%xyzs(j,1),j=1,3),atom(i)%charge
+  if(input_from_RASPA)then
+   read(line,*,iostat=ierr)atom(i)%label_from_CIFFile, atom(i)%label, (atom(i)%xyzs(j,1),j=1,3), atom(i)%charge
+  elseif(charges_flag) then
+   read(line,*,iostat=ierr)atom(i)%label,(atom(i)%xyzs(j,1),j=1,3),atom(i)%charge
   else if(adsorption_fast_atom_saturation_INPUT) then
-   read(line,*)  atom(i)%label_from_CIFFile, atom(i)%label, (atom(i)%xyzs(j,1),j=1,3), atom(i)%charge
-   write(line,*) atom(i)%label_from_CIFFile, atom(i)%label, (atom(i)%xyzs(j,1),j=1,3), atom(i)%charge
+   read(line,*,iostat=ierr)atom(i)%label_from_CIFFile, atom(i)%label, (atom(i)%xyzs(j,1),j=1,3), atom(i)%charge
   else
-   read(line,*)atom(i)%label,(atom(i)%xyzs(j,1),j=1,3)
+   read(line,*,iostat=ierr)atom(i)%label,(atom(i)%xyzs(j,1),j=1,3)
    atom(i)%charge=0.0
   end if
+  if(ierr/=0) exit read_atoms
   call CheckAtom(atom(i)%label,atom(i)%mass,atom(i)%radius,atom(i)%element,atom(i)%label_element)
   do j=1,3
    !atom(i)%xyzs(j,1)=mod(atom(i)%xyzs(j,1)+100.0,1.0)

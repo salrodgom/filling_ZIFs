@@ -167,8 +167,9 @@ function interface_adsorption_lammps {
 }
 function first_optimisation {
  update_name
+ CIF111toSupercell
  cp ${CIFTemporallyFile} ${CyclesNameFile}.cif
- ./cif2lammps -c ${CyclesNameFile}.cif -S 
+ ./cif2lammps -c ${CyclesNameFile}.cif -R -S 
  lammps_file_lib="in.lmp.initialitation"
  em_md_lammps
 }
@@ -252,23 +253,22 @@ function lammps_raspa {
  cp ${CyclesNameFile}.cif ../${CyclesNameFile}.cif
  rm input.pdb pdb2cif lammpstrj2pdb out.pdb
 }
-function CIF111to222 {
-  echo "SimulationType  MC
+function CIF111toSupercell {
+ check_supercell
+ echo "SimulationType  MC
 NumberOfCycles               0
 NumberOfInitializationCycles 0
 PrintEvery                   1
 Forcefield  GenericMOFs
 Framework 0
-FrameworkName ${CyclesNameFile}
-UnitCells 2 2 2" > simulation.input
+FrameworkName ${structure}_${seed}
+UnitCells $ua $ub $uc" > simulation.input
  ${HOME}/RASPA/simulations/bin/simulate
- mv Movies/System_0/Framework_0_final_2_2_2_P1.cif input.cif
+ mv Movies/System_0/Framework_0_final_${ua}_${ub}_${uc}_P1.cif ${CIFTemporallyFile}
+ sed -i '/^$/d' ${CIFTemporallyFile}
 }
 function distance_angle_measure {
- #CIF111to222
- cp ${CyclesNameFile}.cif input.cif
- #
- echo "input.cif 5
+ echo "${CIFTemporallyFile} 5
 ${CyclesNameFile}.Geometrical_Analysis.txt
 1.7 2.6
 1.25 1.60" > main.txt
@@ -277,6 +277,7 @@ ${CyclesNameFile}.Geometrical_Analysis.txt
  max_dist_ZnN=$(cat ${CyclesNameFile}.Geometrical_Analysis.txt | grep "ZnN_distances" | awk '{print $4}')
  ave_dist_ZnN=$(cat ${CyclesNameFile}.Geometrical_Analysis.txt | grep "ZnN_distances" | awk '{print $3}')
  overall_goodness=$(cat ${CyclesNameFile}.Geometrical_Analysis.txt | grep "Overall_goodness" | awk '{print $2}')
+ resumen
 }
 function resumen {
  echo "============================="
@@ -306,10 +307,12 @@ cd ${main_folder}
  distance_angle_measure
  energy0=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
  for i in $(seq 1 ${n_cycles}) ; do
+  # 
   guest='argon'
   let cycle++
   cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
   fill_with_guest
+  # 
   flags_cif2lammps="post-loading"
   interface_adsorption_lammps
   remove_guest="false"
@@ -317,16 +320,19 @@ cd ${main_folder}
   energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
   statu=$(echo "scale=4; ($energy - $energy0)/(${n_Ar})" | bc -l)
   distance_angle_measure
-  resumen
   previous_name=${CyclesNameFile}
   guest='xenon'
   cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
   update_name
   sed "s/Ar /Xe /g" ${previous_name}.cif > ${CyclesNameFile}.cif
+  #
   remove_guest="true"
   flags_cif2lammps="post-Xe-Ar-exchange"
   interface_adsorption_lammps
   em_md_lammps
+  energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
+  statu=$(echo "scale=4; ($energy - $energy0)/(${n_Ar})" | bc -l)
+  distance_angle_measure
  done
  clean_binaries
 cd ..
