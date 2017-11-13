@@ -17,10 +17,11 @@ while [ $(echo "$seed > 900000000" | bc -l) == 1 ] || [ $(echo "$seed < 0" | bc 
 done
 CIFTemporallyFile=${structure}_${seed}.cif
 # Files:
-raspa_files_folder=$(pwd)/lib/fff_raspa
-lammps_files_folder=$(pwd)/lib/fff_lammps
-lib_folder=$(pwd)/lib
-src_files_folder=$(pwd)/src
+loc=$(pwd)
+raspa_files_folder=$loc/lib/fff_raspa
+lammps_files_folder=$loc/lib/fff_lammps
+lib_folder=$loc/lib
+src_files_folder=$loc/src
 ##############################################################
 # Functions:
 function make_binaries {
@@ -162,18 +163,6 @@ function interface_adsorption_lammps {
    flags="-wq -S"
   ;;
  esac 
-#
-# if [ "${flags_cif2lammps}" == "post-loading" ] ; then
-#  if [ "${filling_mode}" == "Rabdel_Code" ] ; then
-#   flags="-f -wq -S"
-#  elif 
-#  
-#
-# elif [ "${flags_cif2lammps}" == "initialisation" ] ; then
-#  flags="-S"
-# elif [ "${flags_cif2lammps}" == "post-Xe-Ar-exchange" ] ; then
-#  flags="-wq -S"
-# fi
  ./cif2lammps -c ${CyclesNameFile}.cif ${flags}
 }
 function first_optimisation {
@@ -188,7 +177,6 @@ function em_md_lammps {
  if [ ! -d $folder ] ; then
   mkdir $folder
   mv ${CyclesNameFile}.data $folder/.
-  #mv ${CyclesNameFile}.lmp $folder/.
   mv ${CyclesNameFile}.gin $folder/.
   mv ${CyclesNameFile}.pdb $folder/.
   mv ${CyclesNameFile}.cif $folder/.
@@ -304,38 +292,42 @@ function resumen {
 }
 ##############################################################
 # main program:
-cp ${lib_folder}/forcefield.lib .
-cp ${CIFFile} ${CIFTemporallyFile}
-cycle=0
-n_Ar=0
-cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
-make_binaries
-guest='empty'
-first_optimisation
-distance_angle_measure
-energy0=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
-for i in $(seq 1 ${n_cycles}) ; do
- guest='argon'
- let cycle++
+main_folder=${structure}_${temperature}_${pressure}_${seed}
+mkdir ${main_folder}
+cd ${main_folder}
+ cp ${lib_folder}/forcefield.lib .
+ cp ../${CIFFile} ${CIFTemporallyFile}
+ cycle=0
+ n_Ar=0
  cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
- fill_with_guest
- flags_cif2lammps="post-loading"
- interface_adsorption_lammps
- remove_guest="false"
- em_md_lammps
- energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
- statu=$(echo "scale=4; ($energy - $energy0)/(${n_Ar})" | bc -l)
+ make_binaries
+ guest='empty'
+ first_optimisation
  distance_angle_measure
- resumen
- previous_name=${CyclesNameFile}
- guest='xenon'
- cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
- update_name
- sed "s/Ar /Xe /g" ${previous_name}.cif > ${CyclesNameFile}.cif
- remove_guest="true"
- flags_cif2lammps="post-Xe-Ar-exchange"
- interface_adsorption_lammps
- em_md_lammps
-done
-clean_binaries
+ energy0=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
+ for i in $(seq 1 ${n_cycles}) ; do
+  guest='argon'
+  let cycle++
+  cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
+  fill_with_guest
+  flags_cif2lammps="post-loading"
+  interface_adsorption_lammps
+  remove_guest="false"
+  em_md_lammps
+  energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
+  statu=$(echo "scale=4; ($energy - $energy0)/(${n_Ar})" | bc -l)
+  distance_angle_measure
+  resumen
+  previous_name=${CyclesNameFile}
+  guest='xenon'
+  cycle_name=$(echo $cycle | awk '{ printf("%02d\n", $1) }')
+  update_name
+  sed "s/Ar /Xe /g" ${previous_name}.cif > ${CyclesNameFile}.cif
+  remove_guest="true"
+  flags_cif2lammps="post-Xe-Ar-exchange"
+  interface_adsorption_lammps
+  em_md_lammps
+ done
+ clean_binaries
+cd ..
 exit 0
