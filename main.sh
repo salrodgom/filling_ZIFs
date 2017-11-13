@@ -2,7 +2,7 @@
 CIFFile=$1
 nCPU=$2
 n_cycles=3
-temperature=138.0
+temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
 CyclesEvery=7500
@@ -77,7 +77,7 @@ function mc_muVT_raspa {
  sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
  sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
- sed -i "s/PRESSURE/1.0e12/g" simulation.input
+ sed -i "s/PRESSURE/100000/g" simulation.input
  sed -i "s/GUEST/${guest}/g" simulation.input
  sed -i "s/CYCLESEVERY/${CyclesEvery}/g" simulation.input
  sed -i "s/INITCYCLES/${InitCycles}/g" simulation.input

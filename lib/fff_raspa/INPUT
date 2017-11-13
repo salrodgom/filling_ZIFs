@@ -26,5 +26,5 @@ Component 0 MoleculeName               GUEST
             RotationProbability        1.0
             SwapProbability            1.0
             WidomProbability           1.0
-            CFSwapLambdaProbability    0.0
+            CFSwapLambdaProbability    1.0
             CreateNumberOfMolecules    0
