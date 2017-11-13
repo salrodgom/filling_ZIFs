@@ -10,12 +10,11 @@ InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1
 MoviesEvery=$((CyclesEvery - 1))
 #
 structure=$(echo $CIFFile | sed 's/\.cif//g')
-seed="13870650"
-#seed=$(od --read-bytes=3 --address-radix=n --format=uL /dev/urandom | tr --delete " ")
-#while [ $(echo "$seed > 900000000" | bc -l) == 1 ] || [ $(echo "$seed < 0" | bc -l) == 1 ] ; do
-# seed=$(od --read-bytes=3 --address-radix=n --format=uL /dev/urandom | tr --delete " ")
-# sleep 0.5
-#done
+seed=$(od --read-bytes=3 --address-radix=n --format=uL /dev/urandom | tr --delete " ")
+while [ $(echo "$seed > 900000000" | bc -l) == 1 ] || [ $(echo "$seed < 0" | bc -l) == 1 ] ; do
+ seed=$(od --read-bytes=3 --address-radix=n --format=uL /dev/urandom | tr --delete " ")
+ sleep 0.5
+done
 CIFTemporallyFile=${structure}_${seed}.cif
 # Files:
 loc=$(pwd)
