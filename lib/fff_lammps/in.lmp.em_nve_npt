@@ -37,19 +37,17 @@ thermo             100
 thermo_style       one
 label              loop_min
 min_style          cg
-#fix                1 all box/relax tri 0.0 vmax 0.01 # conp in optimisation!
+fix                1 all box/relax tri 0.0 vmax 0.01 # conp in optimisation!
 log logs/log.opt.${iter} 
-#minimize           1.0e-15 1.0e-15 10000 100000
-minimize           1.0e-8 1.0e-8 1000 10000
+minimize           1.0e-15 1.0e-15 10000 100000
 log logs/log.main append
-#unfix              1
+unfix              1
 min_style          fire
 timestep           0.0005
 variable           tempstp     equal $(step)
 variable           CellMinStep equal ${tempstp}
 log logs/log.opt.${iter}
-#minimize           1.0e-15 1.0e-15 10000 100000
-minimize           1.0e-8 1.0e-8 1000 10000
+minimize           1.0e-15 1.0e-15 10000 100000
 log logs/log.main append
 variable           AtomMinStep equal ${tempstp}
 variable           temppe      equal $(pe)
@@ -62,10 +60,6 @@ jump        SELF loop_min
 label       break_min
 undump      traj_opti
 # start MD
-#dump        traj_frame structure custom ${ndump} movs/framework.lammpstrj element xs ys zs
-#dump_modify traj_frame element ELEMENTS first yes sort id
-#dump        traj_guest guest     custom ${ndump} movs/guests.lammpstrj    element xs ys zs
-#dump_modify traj_guest element ELEMENTS first yes sort id
 dump        traj_all   all       custom ${ndump} movs/all.lammpstrj       element xs ys zs
 dump_modify traj_all   element ELEMENTS first yes sort id
 reset_timestep 0

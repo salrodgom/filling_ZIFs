@@ -5,10 +5,10 @@ PrintPropertiesEvery          100
 PrintEvery                    100
 RandomSeed                    RANDOMSEED
 Forcefield                    Local
-CutOff                        16.709 # sigma*4.9 # Tanaka et al.
+#CutOff                        16.709 # sigma*4.9 # Tanaka et al.
 ChargeMethod                  None
 Framework                     0
-RemoveAtomNumberCodeFromLabel no
+RemoveAtomNumberCodeFromLabel yes
 FrameworkName                 STRUCTURE
 UnitCells                     SUPERCELL
 ExternalTemperature           TEMPERATURE
@@ -25,6 +25,6 @@ Component 0 MoleculeName               GUEST
             RegrowProbability          0.0
             RotationProbability        0.0
             SwapProbability            1.0
-            WidomProbability           0.0
+            WidomProbability           1.0
             CFSwapLambdaProbability    1.0
             CreateNumberOfMolecules    0
