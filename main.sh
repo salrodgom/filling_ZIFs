@@ -5,7 +5,7 @@ n_cycles=2
 temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
-CyclesEvery=50000
+CyclesEvery=5000
 InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1}')
 MoviesEvery=$((CyclesEvery - 1))
 #
@@ -40,6 +40,7 @@ function update_name {
 }
 function check_supercell {
 # Check cell size for correct calculation of energies considering cutoff
+ dos2unix $CIFTemporallyFile
  cutoff=10.0
  ua=1
  ub=1
@@ -47,7 +48,6 @@ function check_supercell {
  a_cell=$(grep "_cell_length_a" $CIFTemporallyFile | awk '{print $2}')
  b_cell=$(grep "_cell_length_b" $CIFTemporallyFile | awk '{print $2}')
  c_cell=$(grep "_cell_length_c" $CIFTemporallyFile | awk '{print $2}')
- a_cell=$(echo "$ua*$a_cell" | bc -l)
  while [ $(echo "$a_cell < 2*$cutoff" | bc -l) == 1 ] ; do
   let "ua++"
   a_cell=$(echo "$ua*$a_cell" | bc -l)
