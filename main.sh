@@ -1,11 +1,11 @@
 #!/bin/bash
 CIFFile=$1
 nCPU=$2
-n_cycles=3
+n_cycles=2
 temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
-CyclesEvery=7500
+CyclesEvery=50000
 InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1}')
 MoviesEvery=$((CyclesEvery - 1))
 #
@@ -79,8 +79,8 @@ function mc_muVT_raspa {
  cp $lib_folder/forcefield.lib .
  sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
- sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
- sed -i "s/PRESSURE/100000/g" simulation.input
+ sed -i "s/TEMPERATURE/50.0/g" simulation.input
+ sed -i "s/PRESSURE/1.0e9/g" simulation.input
  sed -i "s/GUEST/${guest}/g" simulation.input
  sed -i "s/CYCLESEVERY/${CyclesEvery}/g" simulation.input
  sed -i "s/INITCYCLES/${InitCycles}/g" simulation.input
@@ -305,7 +305,7 @@ cd ${main_folder}
  guest='empty'
  first_optimisation
  distance_angle_measure
- energy0=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
+ energy0=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization.txt | awk '{print $5}')
  for i in $(seq 1 ${n_cycles}) ; do
   # 
   guest='argon'
@@ -317,7 +317,7 @@ cd ${main_folder}
   interface_adsorption_lammps
   remove_guest="false"
   em_md_lammps
-  energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
+  energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization.txt | awk '{print $5}')
   statu=$(echo "scale=4; ($energy - $energy0)/(${n_Ar})" | bc -l)
   distance_angle_measure
   previous_name=${CyclesNameFile}
@@ -330,7 +330,7 @@ cd ${main_folder}
   flags_cif2lammps="post-Xe-Ar-exchange"
   interface_adsorption_lammps
   em_md_lammps
-  energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization_postMD.txt | awk '{print $5}')
+  energy=$(tail -n1 ${CyclesNameFile}_emmd/logs/minimization.txt | awk '{print $5}')
   statu=$(echo "scale=4; ($energy - $energy0)/(${n_Ar})" | bc -l)
   distance_angle_measure
  done

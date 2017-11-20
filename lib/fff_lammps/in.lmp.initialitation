@@ -29,32 +29,35 @@ fix xxxxxxx  all recenter INIT INIT INIT
 # ------------------------ Optimisation Run -------------------------------
 dump        traj_opti all custom ${ndump} movs/opti.lammpstrj element xs ys zs
 dump_modify traj_opti element ELEMENTS  first yes sort id
-print "#MinStep CellMinStep AtomMinStep FinalStep Energy EDiff" file logs/minimization_postMD.txt screen no
+print "# First Optimisation: " file logs/minimization.txt screen no
+print "#MinStep CellMinStep AtomMinStep FinalStep Energy EDiff" append logs/minimization.txt screen no
 variable min_eval equal ${Gnorm}
 variable           prev_E     equal 50000.00
 variable           iter       loop 100000
 thermo             100
 thermo_style       one
 label              loop_min_1
- min_style          cg
- log logs/log.opt.${iter}
- minimize           1.0e-15 1.0e-15 10000 100000
- log logs/log.main append
- min_style          fire
- timestep           0.0005
- variable           tempstp     equal $(step)
- variable           CellMinStep equal ${tempstp}
- log logs/log.opt.${iter}
- minimize           1.0e-15 1.0e-15 10000 100000
- log logs/log.main append
- variable           AtomMinStep equal ${tempstp}
- variable           temppe      equal $(pe)
- variable           min_E       equal abs(${prev_E}-${temppe})
- print "${iter} ${CellMinStep} ${AtomMinStep} ${AtomMinStep} $(pe) ${min_E}" append logs/minimization_postMD.txt screen no
- if "${min_E} < ${min_eval}" then "jump SELF break_min_1"
- variable    prev_E     equal ${temppe}
- next        iter
- jump        SELF loop_min_1
+min_style          cg
+log                logs/log.opt
+fix                opt_conp all box/relax tri 0.0 vmax 0.001
+minimize           1.0e-15 1.0e-15 10000 100000
+unfix              opt_conp
+log logs/log.main append
+min_style          fire
+timestep           0.0005
+variable           tempstp     equal $(step)
+variable           CellMinStep equal ${tempstp}
+log logs/log.opt append
+minimize           1.0e-15 1.0e-15 10000 100000
+log logs/log.main append
+variable           AtomMinStep equal ${tempstp}
+variable           temppe      equal $(pe)
+variable           min_E       equal abs(${prev_E}-${temppe})
+print "${iter} ${CellMinStep} ${AtomMinStep} ${AtomMinStep} $(pe) ${min_E}" append logs/minimization.txt screen no
+if "${min_E} < ${min_eval}" then "jump SELF break_min_1"
+variable    prev_E     equal ${temppe}
+next        iter
+jump        SELF loop_min_1
 label       break_min_1
- undump      traj_opti
- print "Simulation finished"
+undump      traj_opti
+print "Simulation finished"

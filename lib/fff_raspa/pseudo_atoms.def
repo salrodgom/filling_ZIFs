@@ -1,8 +1,7 @@
 #number of pseudo atoms
-5
+4
 #type      print   as    chem  oxidation   mass        charge   polarization B-factor radii  connectivity anisotropic anisotropic-type   tinker-type
 He         yes     He    He    0           4.002602    0.0      0.0          1.0      1.0    0            0           relative           0
-CH4        yes     C     C     0           16.04246    0.0      0.0          1.0      1.00   0            0           relative           0
 Ar         yes     Ar    Ar    0           39.948      0.0      0.0          1.0      0.7    0            0           relative           0
 Kr         yes     Kr    Kr    0           83.798      0.0      0.0          1.0      1.00   0            0           relative           0
 Xe         yes     Xe    Xe    0           131.293     0.0      0.0          1.0      1.00   0            0           relative           0
