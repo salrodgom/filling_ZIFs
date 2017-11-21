@@ -5,7 +5,7 @@ n_cycles=2
 temperature=85.0
 pressure=0.0
 filling_mode="RASPA" # Rabdel_Code
-CyclesEvery=5000
+CyclesEvery=10000
 InitCycles=$(echo "$CyclesEvery * 0.1" | bc -l | sed 's/\./ /g' | awk '{print $1}')
 MoviesEvery=$((CyclesEvery - 1))
 #
@@ -79,8 +79,8 @@ function mc_muVT_raspa {
  cp $lib_folder/forcefield.lib .
  sed "s/STRUCTURE/${structure}_${seed}/g" INPUT > simulation.input
  sed -i "s/RANDOMSEED/${seed}/g"         simulation.input
- sed -i "s/TEMPERATURE/50.0/g" simulation.input
- sed -i "s/PRESSURE/1.0e9/g" simulation.input
+ sed -i "s/TEMPERATURE/${temperature}/g" simulation.input
+ sed -i "s/PRESSURE/50000/g" simulation.input
  sed -i "s/GUEST/${guest}/g" simulation.input
  sed -i "s/CYCLESEVERY/${CyclesEvery}/g" simulation.input
  sed -i "s/INITCYCLES/${InitCycles}/g" simulation.input
