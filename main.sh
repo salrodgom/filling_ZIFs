@@ -119,8 +119,9 @@ function fill_with_guest {
    RASPA)
     cd $folder
      mc_muVT_raspa
-     n_Ar=$(grep 'absolute adsorption:' Output/System_0/output_*.data | grep 'avg' | awk '{print $3}' | tail -n1 )
-     n_Ar=${n_Ar%.*}
+     n_Ar=$(grep "Ar " p1.cif | wc -l | awk '{print $1}')
+     #n_Ar=$(grep 'absolute adsorption:' Output/System_0/output_*.data | grep 'avg' | awk '{print $3}' | tail -n1 )
+     #n_Ar=${n_Ar%.*}
      Arname=$(echo $CIFTemporallyFile | sed 's/\.cif//g')_Ar.cif
      update_name
      cp p1.cif ../${CIFTemporallyFile}
