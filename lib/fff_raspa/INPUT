@@ -22,8 +22,6 @@ Component 0 MoleculeName               GUEST
             MoleculeDefinition         Local
             FugacityCoefficient        1.0
             TranslationProbability     1.0
-            RegrowProbability          0.0
-            RotationProbability        0.0
             SwapProbability            1.0
             WidomProbability           1.0
             CFSwapLambdaProbability    1.0

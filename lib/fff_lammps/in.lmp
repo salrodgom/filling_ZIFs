@@ -1,4 +1,4 @@
-# FILENAME
+# 01_ZIF-8_xenon_400_15139317
 shell mkdir logs
 shell mkdir movs
 log        logs/log.main
@@ -16,103 +16,127 @@ read_data                    FILENAME.data
 pair_modify                  mix arithmetic shift yes tail no table 0
 special_bonds                lj 0.0 0.0  0.00000 coul 0.0 0.0  0.00000
 variable TK                  equal TEMPERATURE
-variable Pbar                equal 0.0
+variable Pbar                equal PRESSURE
 variable dt                  equal 0.0005
 variable tdamp               equal 100*${dt}
-variable NumberOfNVEMDCycles equal 50000
-variable NumberOfNPTMDCycles equal 350000
+variable NumberOfNVEMDCycles equal 10000
+variable NumberOfNPTMDCycles equal 70000
 variable ndump               equal 100
 variable RandomSeed          equal RANDOMSEED
 variable Gnorm               equal 1e-6
+variable MaxMacroSteps       equal 10
+variable Gnorm_MacroCycle    equal 1e-1
 # recenter and remove system drift 
 fix xxxxxxx  all recenter INIT INIT INIT
 # ------------------------ Optimisation Run -------------------------------
 dump        traj_opti all custom ${ndump} movs/opti.lammpstrj element xs ys zs
-dump_modify traj_opti element ELEMENTS  first yes sort id
-print "# First Optimisation:" file logs/minimization.txt screen no
-print "# MinStep CellMinStep AtomMinStep FinalStep Energy EDiff" append logs/minimization.txt screen no
-variable min_eval equal ${Gnorm}
-variable           prev_E     equal 50000.00
-variable           iter       loop 100000
-thermo             100
-thermo_style       one
-label              loop_min_1
-min_style          cg
-log                logs/log.opt
-minimize           1.0e-15 1.0e-15 10000 100000
-log logs/log.main append
-min_style          cg
-timestep           0.0005
-variable           tempstp     equal $(step)
-variable           CellMinStep equal ${tempstp}
-log logs/log.opt   append
-fix                opt_conp all box/relax tri 0.0 vmax 0.001
-minimize           1.0e-15 1.0e-15 10000 100000
-unfix              opt_conp
-log logs/log.main append
-variable           AtomMinStep equal ${tempstp}
-variable           temppe      equal $(pe)
-variable           min_E       equal abs(${prev_E}-${temppe})
-print "${iter} ${CellMinStep} ${AtomMinStep} $(pe) ${min_E}" append logs/minimization.txt screen no
-if "${min_E} < ${min_eval}" then "jump SELF break_min_1"
-variable    prev_E     equal ${temppe}
-next        iter
-jump        SELF loop_min_1
+dump_modify traj_opti element ELEMENTS   first yes sort id
+variable           min_eval            equal ${Gnorm}
+variable           min_eval_MacroCycle equal ${Gnorm_MacroCycle}
+run                0
+variable           prev_E     equal $(pe)
+variable           prev_E_MacroCycle equal $(pe)
+print "# First Optimisation"                             file logs/minimization.txt screen no
+print "# initial energy: ${prev_E}"                    append logs/minimization.txt screen no
+print "# Interation AtomMinStep CellMinStep Energy EDiff" append logs/minimization.txt screen no
+variable            iter       loop 100000
+ thermo             100
+ thermo_style       one
+ label              loop_min_1
+ min_style          cg
+ log                logs/log.opt
+ minimize           1.0e-15 1.0e-15 10000 100000
+ log logs/log.main append
+ min_style          cg
+ variable           AtomMinStep equal $(step)
+ log logs/log.opt   append
+ fix                opt_conp all box/relax tri 0.0 vmax 0.001
+ minimize           1.0e-15 1.0e-15 10000 100000
+ unfix              opt_conp
+ log logs/log.main  append
+ variable           CellMinStep equal $(step)-${AtomMinStep}
+ variable           tmppe       equal $(pe)
+ variable           min_E       equal abs(${prev_E}-$(pe))
+ reset_timestep     0
+ print "${iter} ${AtomMinStep} ${CellMinStep} ${tmppe} ${min_E}" append logs/minimization.txt screen no
+ if "${min_E} < ${min_eval}" then &
+  "next iter" &
+  "jump SELF break_min_1"
+ variable    prev_E equal ${tmppe}
+ next        iter
+ jump        SELF loop_min_1
 label       break_min_1
 undump      traj_opti
-# ------------------------ Equilibration Run -------------------------------
-dump        traj_all   all       custom ${ndump} movs/all.lammpstrj       element xs ys zs
-dump_modify traj_all   element ELEMENTS first yes sort id
-reset_timestep 0
-# 
-velocity all create ${TK} ${RandomSeed}
-fix      2 all langevin ${TK} ${TK} ${tdamp} ${RandomSeed}
-fix      3 all nve
-thermo   100
-log      logs/log.nvt
-run      ${NumberOfNVEMDCycles}
-log      logs/log.main append
-unfix    2
-unfix    3
-fix      4 all npt temp ${TK} ${TK} ${tdamp} tri ${Pbar} ${Pbar} ${tdamp}
-thermo   100
-log      logs/log.npt
-run      ${NumberOfNPTMDCycles}
-log      logs/log.main append
-unfix    4
-undump   traj_all
-# Optimisation again:
-dump        traj_opti all custom ${ndump} movs/opti.lammpstrj element xs ys zs
-dump_modify traj_opti element ELEMENTS  first yes sort id append yes
-print "# Post Molecular Dynamics" append logs/minimization.txt screen no
-print "# MinStep CellMinStep AtomMinStep FinalStep Energy EDiff" append logs/minimization.txt screen no
-variable min_eval equal ${Gnorm}
-variable           prev_E     equal 50000.00
-variable           iter       loop 100000
-thermo             100
-thermo_style       one
-label              loop_min_2
-min_style          cg
-log                logs/log.opt append
-minimize           1.0e-15 1.0e-15 10000 100000
-log logs/log.main append
-min_style          cg
-timestep           0.0005
-variable           tempstp     equal $(step)
-variable           CellMinStep equal ${tempstp}
-log logs/log.opt   append
-fix                opt_conp all box/relax tri 0.0 vmax 0.001
-minimize           1.0e-15 1.0e-15 10000 100000
-unfix              opt_conp
-log logs/log.main  append
-variable           AtomMinStep equal ${tempstp}
-variable           temppe      equal $(pe)
-variable           min_E       equal abs(${prev_E}-${temppe})
-print "${iter} ${CellMinStep} ${AtomMinStep} $(pe) ${min_E}" append logs/minimization.txt screen no
-if "${min_E} < ${min_eval}" then "jump SELF break_min_2"
-variable    prev_E     equal ${temppe}
-next        iter
-jump        SELF loop_min_2
-label       break_min_2
-undump      traj_opti
+label loop_MacroCycle
+variable MacroStep loop ${MaxMacroSteps}
+ # ------------------------ Equilibration Run -------------------------------
+ print "#" append logs/minimization.txt screen no
+ print "# Molecular Dynamics [${MacroStep}]" append logs/minimization.txt screen no
+ dump        traj_all   all       custom ${ndump} movs/all.lammpstrj       element xs ys zs
+ dump_modify traj_all   element ELEMENTS  first yes sort id
+ reset_timestep 0
+ velocity all create ${TK} ${RandomSeed}
+ fix      2 all langevin ${TK} ${TK} ${tdamp} ${RandomSeed}
+ fix      3 all nve
+ thermo   100
+ log      logs/log.nvt
+ run      ${NumberOfNVEMDCycles}
+ log      logs/log.main append
+ unfix    2
+ unfix    3
+ fix      4 all npt temp ${TK} ${TK} ${tdamp} tri ${Pbar} ${Pbar} ${tdamp}
+ thermo   100
+ log      logs/log.npt
+ run      ${NumberOfNPTMDCycles}
+ log      logs/log.main append
+ unfix    4
+ undump   traj_all
+ variable e equal pe
+ print "# Final potential energy = $e"              append logs/minimization.txt screen no
+ # Optimisation again:
+ reset_timestep 0
+ dump        traj_opti all custom ${ndump} movs/opti.lammpstrj element xs ys zs
+ dump_modify traj_opti element ELEMENTS   first yes sort id append yes
+ print "#" append logs/minimization.txt screen no
+ print "# Post-Molecular-Dynamics Optimisation" append logs/minimization.txt screen no
+ print "# Interation AtomMinStep AtomMinStep Energy EDiff" append logs/minimization.txt screen no
+ #print "# MinStep CellMinStep AtomMinStep panem p equal $(step)
+ variable           prev_E     equal 50000.00
+ variable           iter       loop 100000
+  thermo             100
+  thermo_style       one
+  label              loop_min_2
+  min_style          cg
+  log                logs/log.opt append
+  minimize           1.0e-15 1.0e-15 10000 100000
+  log                logs/log.main append
+  min_style          cg
+  variable           AtomMinStep equal $(step)
+  log                logs/log.opt   append
+  fix                opt_conp all box/relax tri 0.0 vmax 0.001
+  minimize           1.0e-15 1.0e-15 10000 100000
+  unfix              opt_conp
+  log                logs/log.main append
+  variable           CellMinStep equal $(step)-${AtomMinStep}
+  variable           min_E       equal abs(${prev_E}-$(pe))
+  variable           tmppe       equal $(pe)
+  reset_timestep 0
+  print "${iter} ${AtomMinStep} ${CellMinStep} ${tmppe} ${min_E}" append logs/minimization.txt screen no
+  if "${min_E} < ${min_eval}" then &
+   "next iter" &
+   "jump SELF break_min_2"
+  variable    prev_E     equal ${tmppe}
+  next        iter
+ jump        SELF loop_min_2
+ label       break_min_2
+ undump      traj_opti
+ variable    min_E_MacroCycle equal ${prev_E_MacroCycle}-${tmppe}
+ variable    min_E_MacroCycle_abs equal abs(${min_E_MacroCycle})
+ print "# "  append logs/minimization.txt screen no
+ print "# Final potential energy = ${tmppe} eV, Gnorm = ${min_E_MacroCycle} eV" append logs/minimization.txt screen no
+ if "${min_E_MacroCycle_abs} < ${min_eval_MacroCycle}" then "jump SELF break_MacroCycle"
+ variable prev_E_MacroCycle equal ${tmppe}
+ next MacroStep
+ jump SELF loop_MacroCycle
+label break_MacroCycle
 print "Simulation finished"
